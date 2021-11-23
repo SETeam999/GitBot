@@ -4,6 +4,7 @@ import org.kohsuke.github.*;
 import java.util.Map;
 import java.util.List;
 import java.io.IOException;
+import java.util.Objects;
 
 public class Main {
 
@@ -23,14 +24,14 @@ public class Main {
             for (int i = 0; i < repositories.size(); i++) {
                 GHRepository repository = repositories.get(repositories.keySet().toArray()[i]);
                 List<GHPullRequest> pullRequests = repository.getPullRequests(GHIssueState.OPEN);
-                for (int j = 0; j < pullRequests.size(); j++) {
-                    System.out.println(pullRequests.get(j).getMergeableState());
+                for (GHPullRequest pullRequest : pullRequests) {
+                    System.out.println(pullRequest.getMergeableState());
 
-                    if(pullRequests.get(j).getMergeableState() == "clean"){
-                        System.out.println("No merge conflict");
+                    if (Objects.equals(pullRequest.getMergeableState(), "clean")) {
+                        pullRequest.addLabels("No merge conflict");
                     }
-                    if(pullRequests.get(j).getMergeableState() == "dirty"){
-                        System.out.println("Merge conflict found");
+                    if (Objects.equals(pullRequest.getMergeableState(), "dirty")) {
+                        pullRequest.addLabels("No merge conflict");
                     }
                     // Detect if we can merge
                 }
