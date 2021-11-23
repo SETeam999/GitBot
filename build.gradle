@@ -1,0 +1,31 @@
+plugins {
+    id 'application'
+}
+
+group 'com.linkit'
+version '0.0.1'
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin : "java"
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    // https://mvnrepository.com/artifact/org.kohsuke/github-api
+    implementation group: 'org.kohsuke', name: 'github-api', version: '1.135'
+}
+
+ext {
+    javaMainClass = "com.LinkIT.Main"
+}
+
+application {
+    mainClassName = javaMainClass
+}
+
+test {
+    useJUnitPlatform()
+}
