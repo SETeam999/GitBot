@@ -1,54 +1,67 @@
-package com.LinkIT;
+    package com.LinkIT;
 
-import org.kohsuke.github.*;
-import java.util.Map;
-import java.util.List;
-import java.io.IOException;
-import java.util.Objects;
+    import org.kohsuke.github.*;
+    import java.util.Map;
+    import java.util.List;
+    import java.io.IOException;
+    import java.util.Objects;
 
-public class Main {
+    public class Main {
 
-    private GHApp app;
-    GitHub github;
+        private GHApp app;
+        GitHub github;
+        Tagging t;
+        MergeConflictResolver MCR;
+        StopMerge SM;
+        int count_merged = 0;
 
-    Main() {
+        Main() {
+            app = new GHApp();
 
-        app = new GHApp();
+            try {
+                github = new GitHubBuilder().withOAuthToken("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")
+                        .build();
+                GHOrganization organization = github.getOrganization("SETeam999");
 
-        try {
-            github = new GitHubBuilder().withOAuthToken("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")
-                    .build();
-            GHOrganization organization = github.getOrganization("SETeam999");
+                Map<String, GHRepository> repositories = organization.getRepositories(); //what is the string part
 
-            Map<String, GHRepository> repositories = organization.getRepositories();
-            for (int i = 0; i < repositories.size(); i++) {
-                GHRepository repository = repositories.get(repositories.keySet().toArray()[i]);
-                List<GHPullRequest> pullRequests = repository.getPullRequests(GHIssueState.OPEN);
-                for (GHPullRequest pullRequest : pullRequests) {
-                    System.out.println(pullRequest.getMergeableState());
+                for (int i = 0; i < repositories.size(); i++) {
+                    GHRepository repository = repositories.get(repositories.keySet().iterator().next()); //repositories.keySet().toArray()[i]
+                    List<GHPullRequest> pullRequests = repository.getPullRequests(GHIssueState.OPEN);
 
-                    if (Objects.equals(pullRequest.getMergeableState(), "clean")) {
-                        pullRequest.addLabels("No merge conflict");
+                    for (GHPullRequest pullRequest : pullRequests) {
+                        if (Objects.equals(pullRequest.getMergeableState(), "clean")) {
+                            t.noconflict(pullRequest);
+                        }
+                        if (Objects.equals(pullRequest.getMergeableState(), "dirty")) {
+                            t.conflict(pullRequest);
+                            if (pullRequest.getMergeable()) {
+                                MCR.package_lock_conflict();
+                                t.conflict_resolved(pullRequest);
+                            }
+                        }
+                    if(pullRequest.getLabels().equals("Ready to merge")){
+                        MCR.automerge(pullRequest);
+                        t.merge_in_process(pullRequest);
                     }
-                    if (Objects.equals(pullRequest.getMergeableState(), "dirty")) {
-                        pullRequest.addLabels("No merge conflict");
+                    if(pullRequest.isMerged()){
+                        count_merged++;
                     }
-                    // Detect if we can merge
+                    }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+
+
         }
 
+        public void start() {
+            // We start our app here
+        }
 
-
+        public static void main(String [] args){
+            (new Main()).start();
+        }
     }
-
-    public void start() {
-        // We start our app here
-    }
-
-    public static void main(String [] args){
-        (new Main()).start();
-    }
-}
