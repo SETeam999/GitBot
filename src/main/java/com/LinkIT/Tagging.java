@@ -1,5 +1,6 @@
     package com.LinkIT;
 
+    import org.kohsuke.github.GHBranch;
     import org.kohsuke.github.GHPullRequest;
 
     import java.io.IOException;
@@ -22,7 +23,7 @@
         }
 
         public void mark_branch(GHBranch branch) throws IOException{
-            branch.addLabels("Branch Marked");
+            branch.("Branch Marked"); //how to mark a branch (does not support labels)
         }
     }
 

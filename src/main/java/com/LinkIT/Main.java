@@ -31,21 +31,21 @@
 
                     for (GHPullRequest pullRequest : pullRequests) {
                         if (Objects.equals(pullRequest.getMergeableState(), "clean")) {
-                            t.noconflict(pullRequest);
+                            t.noconflict(pullRequest); //tag no merge conflict found
                         }
                         if (Objects.equals(pullRequest.getMergeableState(), "dirty")) {
-                            t.conflict(pullRequest);
+                            t.conflict(pullRequest); //tag merge conflict found
                             if (pullRequest.getMergeable()) {
-                                MCR.package_lock_conflict();
-                                t.conflict_resolved(pullRequest);
+                                MCR.package_lock_conflict(); //package-lock merge conflict resolver
+                                t.conflict_resolved(pullRequest); //tag conflict resolved
                             }
                         }
-                    if(pullRequest.getLabels().equals("Ready to merge")){
-                        MCR.automerge(pullRequest);
-                        t.merge_in_process(pullRequest);
+                    if(Objects.equals(pullRequest.getLabels().toString(), "Ready to merge")){ //if code receives label ready to merge
+                        MCR.automerge(pullRequest); //auto merge
+                        t.merge_in_process(pullRequest); //tag merge in process
                     }
                     if(pullRequest.isMerged()){
-                        count_merged++;
+                        count_merged++; //counting merges
                     }
                     }
                 }
@@ -57,9 +57,7 @@
 
         }
 
-        public void stopPullRequest(GHPullRequest pullRequest){
-            pullRequest.close();
-        }
+
 
         public void start() {
             // We start our app here
