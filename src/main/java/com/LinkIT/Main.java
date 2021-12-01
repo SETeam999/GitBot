@@ -30,6 +30,7 @@
 
                     for (GHPullRequest pullRequest : pullRequests) {
                         mergingClass.merging(pullRequest);
+
                     }
                 }
             } catch (IOException e) {
