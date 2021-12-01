@@ -9,14 +9,13 @@ import java.util.Objects;
 public class MergingClass {
 
     int count_merged = 0;
+    Tagging tagging;
+    MergeConflictResolver mergeConflictResolver;
 
     public MergingClass(Tagging tagging, MergeConflictResolver mergeConflictResolver) {
         this.tagging = tagging;
         this.mergeConflictResolver = mergeConflictResolver;
     }
-
-    Tagging tagging;
-    MergeConflictResolver mergeConflictResolver;
 
     public void merging(GHPullRequest pullRequest) throws IOException {
         String mergeableState = pullRequest.getMergeableState();
