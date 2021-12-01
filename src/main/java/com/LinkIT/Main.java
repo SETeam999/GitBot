@@ -25,12 +25,16 @@
                 Map<String, GHRepository> repositories = organization.getRepositories(); //what is the string part
 
                 for (int i = 0; i < repositories.size(); i++) {
-                    GHRepository repository = repositories.get(repositories.keySet().iterator().next()); //repositories.keySet().toArray()[i]
-                    List<GHPullRequest> pullRequests = repository.getPullRequests(GHIssueState.OPEN);
+                    for (String repositoryKeySets: repositories.keySet()) {
+                        GHRepository repository = repositories.get(repositoryKeySets);
 
-                    for (GHPullRequest pullRequest : pullRequests) {
-                        mergingClass.merging(pullRequest);
+                        List<GHPullRequest> pullRequests = repository.getPullRequests(GHIssueState.OPEN);
+
+                        for (GHPullRequest pullRequest : pullRequests) {
+                            mergingClass.merging(pullRequest);
+                        }
                     }
+
                 }
             } catch (IOException e) {
                 e.printStackTrace();

@@ -12,7 +12,6 @@
     public class MergeConflictResolver {
 
         StopMerge SM;
-
         ProcessBuilder processBuilder = new ProcessBuilder();
         boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows"); //windows has different commands
 
