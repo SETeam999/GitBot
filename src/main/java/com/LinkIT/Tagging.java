@@ -1,6 +1,5 @@
     package com.LinkIT;
 
-    import org.kohsuke.github.GHBranch;
     import org.kohsuke.github.GHPullRequest;
 
     import java.io.IOException;
@@ -22,8 +21,8 @@
             pullRequest.addLabels("Merge in process.");
         }
 
-        public void mark_branch(GHBranch branch) throws IOException{
-            branch.("Branch Marked"); //how to mark a branch (does not support labels)
+        public void mark_branch(GHPullRequest pullRequest) throws IOException{
+            pullRequest.addLabels("Branch Marked"); //how to mark a branch (does not support labels)
         }
     }
 

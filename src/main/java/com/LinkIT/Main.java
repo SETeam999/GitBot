@@ -4,16 +4,15 @@
     import java.util.Map;
     import java.util.List;
     import java.io.IOException;
-    import java.util.Objects;
 
     public class Main {
 
         private GHApp app;
         GitHub github;
-        Tagging t;
-        MergeConflictResolver MCR;
-        StopMerge SM;
-        int count_merged = 0;
+        Tagging tagging = new Tagging();
+        MergeConflictResolver mergeConflictResolver = new MergeConflictResolver();
+        MergingClass mergingClass = new MergingClass(tagging, mergeConflictResolver);
+
 
         Main() {
             app = new GHApp();
@@ -30,32 +29,15 @@
                     List<GHPullRequest> pullRequests = repository.getPullRequests(GHIssueState.OPEN);
 
                     for (GHPullRequest pullRequest : pullRequests) {
-                        if (Objects.equals(pullRequest.getMergeableState(), "clean")) {
-                            t.noconflict(pullRequest); //tag no merge conflict found
-                        }
-                        if (Objects.equals(pullRequest.getMergeableState(), "dirty")) {
-                            t.conflict(pullRequest); //tag merge conflict found
-                            if (pullRequest.getMergeable()) {
-                                MCR.package_lock_conflict(); //package-lock merge conflict resolver
-                                t.conflict_resolved(pullRequest); //tag conflict resolved
-                            }
-                        }
-                    if(Objects.equals(pullRequest.getLabels().toString(), "Ready to merge")){ //if code receives label ready to merge
-                        MCR.automerge(pullRequest); //auto merge
-                        t.merge_in_process(pullRequest); //tag merge in process
-                    }
-                    if(pullRequest.isMerged()){
-                        count_merged++; //counting merges
-                    }
+                        mergingClass.merging(pullRequest);
                     }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-
-
         }
+
 
 
 
