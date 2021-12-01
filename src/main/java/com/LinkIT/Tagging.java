@@ -21,6 +21,9 @@
             pullRequest.addLabels("Merge in process.");
         }
 
+        public void mark_branch(GHBranch branch) throws IOException{
+            branch.addLabels("Branch Marked");
+        }
     }
 
 

@@ -57,6 +57,10 @@
 
         }
 
+        public void stopPullRequest(GHPullRequest pullRequest){
+            pullRequest.close();
+        }
+
         public void start() {
             // We start our app here
         }
