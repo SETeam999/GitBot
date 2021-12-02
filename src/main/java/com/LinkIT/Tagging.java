@@ -1,8 +1,11 @@
     package com.LinkIT;
 
+    import org.kohsuke.github.GHLabel;
     import org.kohsuke.github.GHPullRequest;
 
     import java.io.IOException;
+    import java.util.Collection;
+    import java.util.List;
 
     public class Tagging {
         public void noconflict(GHPullRequest pullRequest) throws IOException {
@@ -31,5 +34,17 @@
 
         public void mark_branch(GHPullRequest pullRequest) throws IOException{
             pullRequest.addLabels("Branch Marked"); //how to mark a branch (does not support labels)
+        }
+        public boolean checkDontMergeTag(List<GHPullRequest> pullRequests){
+            Collection<GHLabel> labels;
+            for (GHPullRequest pullRequest : pullRequests){
+                labels =  pullRequest.getLabels();
+                for(GHLabel label: labels){
+                    if (label.toString().equals("Dont merge")){
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }

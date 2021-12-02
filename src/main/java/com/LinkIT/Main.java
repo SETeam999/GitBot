@@ -1,6 +1,8 @@
     package com.LinkIT;
 
     import org.kohsuke.github.*;
+
+    import java.util.Collection;
     import java.util.Map;
     import java.util.List;
     import java.io.IOException;
@@ -32,6 +34,9 @@
                         List<GHPullRequest> pullRequests = repository.getPullRequests(GHIssueState.OPEN);
 
                         for (GHPullRequest pullRequest : pullRequests) {
+                            if (tagging.checkDontMergeTag(pullRequests)){
+                                break;
+                            }
                             notification.Processing(pullRequest);
                             mergingClass.merging(pullRequest);
                         }
@@ -42,6 +47,7 @@
                 e.printStackTrace();
             }
         }
+
 
         public void start() {
             // We start our app here
