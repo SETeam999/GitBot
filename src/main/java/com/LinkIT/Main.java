@@ -41,11 +41,7 @@
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
-
-
-
 
         public void start() {
             // We start our app here

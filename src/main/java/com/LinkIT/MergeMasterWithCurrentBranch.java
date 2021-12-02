@@ -13,6 +13,7 @@ public class MergeMasterWithCurrentBranch {
     private GHBranchProtection ghBranchProtection;
     private GHCommit ghCommit;
     private GHRepository current;
+    private int branch_merge_counter = 0;
 
     void MergeMasterWithCurrentBranch() throws IOException {
 
@@ -24,7 +25,11 @@ public class MergeMasterWithCurrentBranch {
 
         ghBranch.disableProtection();
         ghBranch.merge(getMasterBranch(), "Merging Master Branch with the current Branch");
+        branch_merge_counter++;
+    }
 
+    public int getBranchMergeCounter(){
+        return branch_merge_counter;
     }
 
 //    public String resolveRemoteBranch() {
