@@ -10,6 +10,7 @@
         private GHApp app;
         GitHub github;
         Tagging tagging = new Tagging();
+        Notification notification = new Notification();
         MergeConflictResolver mergeConflictResolver = new MergeConflictResolver();
         MergingClass mergingClass = new MergingClass(tagging, mergeConflictResolver);
 
@@ -31,6 +32,7 @@
                         List<GHPullRequest> pullRequests = repository.getPullRequests(GHIssueState.OPEN);
 
                         for (GHPullRequest pullRequest : pullRequests) {
+                            notification.Processing(pullRequest);
                             mergingClass.merging(pullRequest);
                         }
                     }

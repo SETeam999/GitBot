@@ -25,5 +25,3 @@
             pullRequest.addLabels("Branch Marked"); //how to mark a branch (does not support labels)
         }
     }
-
-

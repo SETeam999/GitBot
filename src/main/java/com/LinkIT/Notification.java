@@ -12,7 +12,7 @@ public class Notification {
 
     void ThumbUpPullRequest(GHPullRequest ghpullRequest){
         try {
-            ghpullRequest.comment("\uD83D\uDE00");
+            ghpullRequest.comment("\uD83D\uDC4D");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -24,7 +24,14 @@ public class Notification {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    void Processing(GHPullRequest ghpullRequest){
+        try {
+            ghpullRequest.comment("Processing...");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
