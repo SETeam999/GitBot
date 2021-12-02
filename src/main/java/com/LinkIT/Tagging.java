@@ -21,6 +21,14 @@
             pullRequest.addLabels("Merge in process.");
         }
 
+        public void not_mergeable(GHPullRequest pullRequest) throws IOException {
+            pullRequest.addLabels("Not mergeable");
+        }
+
+        public void permission_to_merge(GHPullRequest pullRequest) throws IOException {
+            pullRequest.addLabels("Did not get permission to merge ");
+        }
+
         public void mark_branch(GHPullRequest pullRequest) throws IOException{
             pullRequest.addLabels("Branch Marked"); //how to mark a branch (does not support labels)
         }

@@ -32,6 +32,9 @@ public class MergingClass {
             mergeConflictResolver.automerge(pullRequest); //auto merge
             tagging.merge_in_process(pullRequest); //tag merge in process
         }
+        else{
+            tagging.permission_to_merge(pullRequest);
+        }
     }
 
     private void handleCleanMergeableState(GHPullRequest pullRequest, String mergeableState) throws IOException {
@@ -48,6 +51,9 @@ public class MergingClass {
             if (pullRequest.getMergeable()) {
                 mergeConflictResolver.package_lock_conflict(); //package-lock merge conflict resolver
                 tagging.conflict_resolved(pullRequest); //tag conflict resolved
+            }
+            else{
+                tagging.not_mergeable(pullRequest);
             }
         }
     }
