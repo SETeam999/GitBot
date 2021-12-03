@@ -12,10 +12,11 @@
         private GHApp app;
         GitHub github;
         Tagging tagging = new Tagging();
+        CheckTags checkTags = new CheckTags();
         Notification notification = new Notification();
         MergeConflictResolver mergeConflictResolver = new MergeConflictResolver();
-        MergingClass mergingClass = new MergingClass(tagging, mergeConflictResolver);
-
+        MergingClass mergingClass = new MergingClass(tagging, checkTags, mergeConflictResolver);
+        
 
         Main() {
             app = new GHApp();
@@ -34,7 +35,7 @@
                         List<GHPullRequest> pullRequests = repository.getPullRequests(GHIssueState.OPEN);
 
                         for (GHPullRequest pullRequest : pullRequests) {
-                            if (!tagging.checkDontMergeTag(pullRequest)){
+                            if (!checkTags.checkDontMergeTag(pullRequest)){
                                 notification.Processing(pullRequest);
                                 mergingClass.merging(pullRequest);
                             }

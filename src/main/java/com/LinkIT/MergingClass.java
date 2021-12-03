@@ -10,14 +10,17 @@ public class MergingClass {
 
     int count_merged = 0;
     Tagging tagging;
+    CheckTags checkTags = new CheckTags();
     MergeConflictResolver mergeConflictResolver;
 
-    public MergingClass(Tagging tagging, MergeConflictResolver mergeConflictResolver) {
+    public MergingClass(Tagging tagging, CheckTags checkTags, MergeConflictResolver mergeConflictResolver) {
         this.tagging = tagging;
+        this.checkTags = checkTags;
         this.mergeConflictResolver = mergeConflictResolver;
     }
 
     public void merging(GHPullRequest pullRequest) throws IOException {
+        tagging.mark_branch(pullRequest);
         String mergeableState = pullRequest.getMergeableState();
         handleCleanMergeableState(pullRequest, mergeableState);
         handleDirtyMergeableState(pullRequest, mergeableState);
@@ -28,7 +31,7 @@ public class MergingClass {
     }
 
     private void handleReadytoMerge(GHPullRequest pullRequest) throws IOException {
-        if(Objects.equals(pullRequest.getLabels().toString(), "Ready to merge")){ //if code receives label ready to merge
+        if(checkTags.checkReadytoMergeTag(pullRequest)){ //if code receives label ready to merge
             mergeConflictResolver.automerge(pullRequest); //auto merge
             tagging.merge_in_process(pullRequest); //tag merge in process
         }
@@ -49,7 +52,7 @@ public class MergingClass {
             for (GHPullRequestFileDetail page: pullRequest.listFiles()) {
                 System.out.println( page.getFilename());            }
             if (pullRequest.getMergeable()) {
-                mergeConflictResolver.package_lock_conflict(); //package-lock merge conflict resolver
+                mergeConflictResolver.package_lock_conflict_resolver(); //package-lock merge conflict resolver
                 tagging.conflict_resolved(pullRequest); //tag conflict resolved
             }
             else{
