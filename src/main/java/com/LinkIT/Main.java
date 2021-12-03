@@ -34,11 +34,10 @@
                         List<GHPullRequest> pullRequests = repository.getPullRequests(GHIssueState.OPEN);
 
                         for (GHPullRequest pullRequest : pullRequests) {
-                            if (tagging.checkDontMergeTag(pullRequests)){
-                                break;
+                            if (!tagging.checkDontMergeTag(pullRequest)){
+                                notification.Processing(pullRequest);
+                                mergingClass.merging(pullRequest);
                             }
-                            notification.Processing(pullRequest);
-                            mergingClass.merging(pullRequest);
                         }
                     }
 

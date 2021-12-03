@@ -35,14 +35,11 @@
         public void mark_branch(GHPullRequest pullRequest) throws IOException{
             pullRequest.addLabels("Branch Marked"); //how to mark a branch (does not support labels)
         }
-        public boolean checkDontMergeTag(List<GHPullRequest> pullRequests){
-            Collection<GHLabel> labels;
-            for (GHPullRequest pullRequest : pullRequests){
-                labels =  pullRequest.getLabels();
-                for(GHLabel label: labels){
-                    if (label.toString().equals("Dont merge")){
-                        return true;
-                    }
+        public boolean checkDontMergeTag(GHPullRequest pullRequest){
+            Collection<GHLabel> labels =  pullRequest.getLabels();
+            for(GHLabel label: labels){
+                if (label.toString().equals("Dont merge")){
+                    return true;
                 }
             }
             return false;

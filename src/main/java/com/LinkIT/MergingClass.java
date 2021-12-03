@@ -47,7 +47,7 @@ public class MergingClass {
         if (Objects.equals(mergeableState, "dirty")) {
             tagging.conflict(pullRequest); //tag merge conflict found
             for (GHPullRequestFileDetail page: pullRequest.listFiles()) {
-                System.out.println("hahaha" + page.getFilename());            }
+                System.out.println( page.getFilename());            }
             if (pullRequest.getMergeable()) {
                 mergeConflictResolver.package_lock_conflict(); //package-lock merge conflict resolver
                 tagging.conflict_resolved(pullRequest); //tag conflict resolved
