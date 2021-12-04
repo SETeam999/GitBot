@@ -6,7 +6,7 @@ public class StopMerge {
     boolean isWindows = System.getProperty("os.name")
             .toLowerCase().startsWith("windows");
 
-    public void reset_merge(){
+    public void reset_merge(){ //not used but implemented anyway in case the company needed to use it
         if(isWindows){
             processBuilder.command("cmd.exe", "/c", "git reset --hard HEAD"); //moving branch back to where it was last
         }else{

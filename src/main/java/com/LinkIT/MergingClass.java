@@ -34,6 +34,9 @@ public class MergingClass {
         if(checkTags.checkReadytoMergeTag(pullRequest)){ //if code receives label ready to merge
             mergeConflictResolver.automerge(pullRequest); //auto merge
             tagging.merge_in_process(pullRequest); //tag merge in process
+            if(pullRequest.isMerged()){
+                tagging.is_merged(pullRequest);
+            }
         }
         else{
             tagging.permission_to_merge(pullRequest);

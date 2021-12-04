@@ -33,12 +33,12 @@
                 processBuilder.command("cmd.exe", "/c", "git add ."); 
                 processBuilder.command("cmd.exe", "/c", "git commit -m 'bot merging branch to master'"); 
                 processBuilder.command("cmd.exe", "/c", "git checkout master"); 
-                processBuilder.command("cmd.exe", "/c", "git merge new-branch");
+                processBuilder.command("cmd.exe", "/c", "git merge new-branch"); //find and add branch
             }else{
                 processBuilder.command("sh", "-c", "git add .");
                 processBuilder.command("sh", "-c", "git commit -m 'bot merging branch to master'");
                 processBuilder.command("sh", "-c", "git checkout master");
-                processBuilder.command("sh", "-c", "git merge new-branch");
+                processBuilder.command("sh", "-c", "git merge new-branch"); //find and add branch
             }
             
             if (checkTags.checkStopMergeTag(pullRequest)){

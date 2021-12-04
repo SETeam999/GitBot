@@ -28,6 +28,10 @@
             pullRequest.addLabels("Not mergeable");
         }
 
+        public void is_merged(GHPullRequest pullRequest) throws IOException {
+            pullRequest.addLabels("Is merged");
+        }
+
         public void permission_to_merge(GHPullRequest pullRequest) throws IOException {
             pullRequest.addLabels("Did not get permission to merge ");
         }

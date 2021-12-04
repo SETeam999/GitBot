@@ -28,14 +28,18 @@ public class LocalRepositoryController {
     // }
 
     public void pullRepository(){
-        GHBranch branch;
-        // Make sure that the folder to pull the repository into exists
-        System.out.println(Files.exists(Path.of(REPOSITORIES_BASE_DIR)));
-        if(Files.exists("git cat-file -e "+ branch :<filename>)){
+        String folder_name_path = REPOSITORIES_BASE_DIR + "/repositoriesfolder.*"; //the folder repositoriesfolder will be found in another folder callled repository
 
-        }
+      if(Files.exists(Path.of(folder_name_path))){ // Make sure that the folder to pull the repository into exists
+          if(isWindows){
+              processBuilder.command("cmd.exe", "/c", "git fetch");
+              processBuilder.command("cmd.exe", "/c", "git checkout HEAD " + REPOSITORIES_BASE_DIR + "/repositoriesfolder.*");
+          }else{
+              processBuilder.command("sh", "-c", "git fetch");
+              processBuilder.command("sh", "-c", "git checkout HEAD " + REPOSITORIES_BASE_DIR + "/repositoriesfolder.*");
+          }
+      }
 
-        // Pull the code into the folder
     }
     public void pushRepository(){
         if(isWindows){
@@ -51,10 +55,16 @@ public class LocalRepositoryController {
 
     public String[] getMergeConflictFiles(String branchName){
         // Checkout the branch
-        git checkout master
-
         // Try to merge it with master
-        git pull origin master
+        if(isWindows){
+            processBuilder.command("cmd.exe", "/c", "git checkout " + branchName); //find and add branch name
+            processBuilder.command("cmd.exe", "/c", "git pull origin master");
+            // or processBuilder.command("cmd.exe", "/c", "git merge new-branch");
+        }else{
+            processBuilder.command("sh", "-c", "git checkout " + branchName); //find and add branch name
+            processBuilder.command("sh", "-c", "git pull origin master");
+            //or processBuilder.command("sh", "-c", "git merge new-branch");
+        }
 
         // Check if the merge succeeded
 
