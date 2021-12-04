@@ -1,59 +1,58 @@
-    package com.LinkIT;
+package com.LinkIT;
 
-    import org.kohsuke.github.*;
+import org.kohsuke.github.*;
 
-    import java.util.Collection;
-    import java.util.Map;
-    import java.util.List;
-    import java.io.IOException;
+import java.util.Collection;
+import java.util.Map;
+import java.util.List;
+import java.io.IOException;
 
-    public class Main {
+public class Main {
 
-        private GHApp app;
-        GitHub github;
-        Tagging tagging = new Tagging();
-        CheckTags checkTags = new CheckTags();
-        Notification notification = new Notification();
-        MergeConflictResolver mergeConflictResolver = new MergeConflictResolver();
-        MergingClass mergingClass = new MergingClass(tagging, checkTags, mergeConflictResolver);
-        
+    private GHApp app;
+    GitHub github;
+    Tagging tagging = new Tagging();
+    CheckTags checkTags = new CheckTags();
+    Notification notification = new Notification();
+    MergeConflictResolver mergeConflictResolver = new MergeConflictResolver();
+    MergingClass mergingClass = new MergingClass(tagging, checkTags, mergeConflictResolver);
 
-        Main() {
-            app = new GHApp();
 
-            try {
-                github = new GitHubBuilder().withOAuthToken("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")
-                        .build();
-                GHOrganization organization = github.getOrganization("SETeam999");
+    Main() {
+        app = new GHApp();
 
-                Map<String, GHRepository> repositories = organization.getRepositories(); //what is the string part
+        try {
+            github = new GitHubBuilder().withOAuthToken("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")
+                    .build();
+            GHOrganization organization = github.getOrganization("SETeam999");
 
-                for (int i = 0; i < repositories.size(); i++) {
-                    for (String repositoryKeySets: repositories.keySet()) {
-                        GHRepository repository = repositories.get(repositoryKeySets);
+            Map<String, GHRepository> repositories = organization.getRepositories(); //what is the string part
 
-                        List<GHPullRequest> pullRequests = repository.getPullRequests(GHIssueState.OPEN);
+            for (int i = 0; i < repositories.size(); i++) {
+                for (String repositoryKeySets: repositories.keySet()) {
+                    GHRepository repository = repositories.get(repositoryKeySets);
 
-                        for (GHPullRequest pullRequest : pullRequests) {
-                            if (!checkTags.checkDontMergeTag(pullRequest)){
-                                notification.Processing(pullRequest);
-                                mergingClass.merging(pullRequest);
-                            }
+                    List<GHPullRequest> pullRequests = repository.getPullRequests(GHIssueState.OPEN);
+
+                    for (GHPullRequest pullRequest : pullRequests) {
+                        if (!checkTags.checkDontMergeTag(pullRequest)){
+                            notification.Processing(pullRequest);
+                            mergingClass.merging(pullRequest);
                         }
                     }
-
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-        }
-
-
-        public void start() {
-            // We start our app here
-        }
-
-        public static void main(String [] args){
-            (new Main()).start();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+
+
+    public void start() {
+        // We start our app here
+    }
+
+    public static void main(String [] args){
+        (new Main()).start();
+    }
+}
