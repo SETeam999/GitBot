@@ -2,13 +2,17 @@ package com.LinkIT;
 
 import org.kohsuke.github.GHBranch;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.io.File;
 
 public class LocalRepositoryController {
     private static String REPOSITORIES_BASE_DIR = "./repositories";
     private String repositoryName;
     private String repositoryRemoteUrl;
+
 
     boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
     ProcessBuilder processBuilder = new ProcessBuilder();
@@ -27,18 +31,35 @@ public class LocalRepositoryController {
     //     controller.pullRepository();
     // }
 
-    public void pullRepository(){
-        String folder_name_path = REPOSITORIES_BASE_DIR + "/repositoriesfolder.*"; //the folder repositoriesfolder will be found in another folder callled repository
+    private void runCommand(String workingDirectory, String ...args) throws IOException {
+        File WorkingDirectoryFile = new File(workingDirectory);
+        processBuilder
+                .command(args)
+                .directory(WorkingDirectoryFile)
+                .redirectOutput(ProcessBuilder.Redirect.INHERIT)
+                .redirectInput(ProcessBuilder.Redirect.INHERIT)
+                .redirectError(ProcessBuilder.Redirect.INHERIT)
+                .start();
+    }
 
-      if(Files.exists(Path.of(folder_name_path))){ // Make sure that the folder to pull the repository into exists
-          if(isWindows){
-              processBuilder.command("cmd.exe", "/c", "git fetch");
-              processBuilder.command("cmd.exe", "/c", "git checkout HEAD " + REPOSITORIES_BASE_DIR + "/repositoriesfolder.*");
-          }else{
-              processBuilder.command("sh", "-c", "git fetch");
-              processBuilder.command("sh", "-c", "git checkout HEAD " + REPOSITORIES_BASE_DIR + "/repositoriesfolder.*");
-          }
-      }
+    public void pullRepository(){
+        try {
+            String workingDirectory = REPOSITORIES_BASE_DIR + "/" + repositoryName;
+            if (!Files.exists(Path.of(workingDirectory))) {
+                // Make sure that the folder to pull the repository into exists
+                Files.createDirectory(Path.of(REPOSITORIES_BASE_DIR));
+                Files.createDirectory(Path.of(workingDirectory));
+            }
+            if (isWindows) {
+                runCommand(workingDirectory, "cmd.exe", "/c", "git fetch");
+                runCommand(workingDirectory, "cmd.exe", "/c", "git checkout HEAD " + REPOSITORIES_BASE_DIR);
+            } else {
+                runCommand(workingDirectory, "sh", "-c", "git fetch");
+                runCommand(workingDirectory, "sh", "-c", "git checkout HEAD " + REPOSITORIES_BASE_DIR);
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
+        }
 
     }
     public void pushRepository(){

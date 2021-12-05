@@ -17,6 +17,7 @@ public class MergeMasterWithCurrentBranch {
         ghBranch.disableProtection();
         ghBranch.merge(getMasterBranch(), "Merging Master Branch with the current Branch");
         branch_merge_counter++;
+
     }
 
     public int getBranchMergeCounter(){

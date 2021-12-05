@@ -6,10 +6,12 @@ import org.kohsuke.github.GHPullRequest;
 import java.io.IOException;
 
 public class Depandabot {
+
+    Notification notification = new Notification();
     MergeConflictResolver merge = new MergeConflictResolver();
 
     public boolean isDependabot(GHPullRequest pullRequest) throws IOException {
-        if(pullRequest.getUser().toString().equals("Dependabot")){
+        if(pullRequest.getUser().getName().equals("dependabot")){
             return true;
         }
         return false;
@@ -17,8 +19,7 @@ public class Depandabot {
 
     public void mergingDependabot(GHPullRequest pullRequest) throws IOException {
         if(isDependabot(pullRequest)) {
-            System.out.println("Dependabot detected");
-            merge.automerge(pullRequest);
+            notification.Inform_dependabot_updateisgood(pullRequest);
         }
     }
 }
