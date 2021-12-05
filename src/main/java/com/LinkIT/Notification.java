@@ -34,4 +34,12 @@ public class Notification {
         }
     }
 
+    void Inform_dependabot_updateisgood(GHPullRequest ghpullRequest){
+        try {
+            ghpullRequest.comment("@dependabot squash and merge");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
