@@ -11,10 +11,7 @@ public class Depandabot {
     MergeConflictResolver merge = new MergeConflictResolver();
 
     public boolean isDependabot(GHPullRequest pullRequest) throws IOException {
-        if(pullRequest.getUser().getName().equals("dependabot")){
-            return true;
-        }
-        return false;
+        return pullRequest.getUser().getName().equals("dependabot");
     }
 
     public void mergingDependabot(GHPullRequest pullRequest) throws IOException {

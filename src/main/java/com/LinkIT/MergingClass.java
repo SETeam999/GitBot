@@ -46,8 +46,11 @@ public class MergingClass {
     private void handleCleanMergeableState(GHPullRequest pullRequest, String mergeableState) throws IOException {
         if (Objects.equals(mergeableState, "clean")) {
             tagging.noconflict(pullRequest); //tag no merge conflict found
+                if (!pullRequest.getMergeable()) {
+                    tagging.not_mergeable(pullRequest);
+                }
+            }
         }
-    }
 
     private void handleDirtyMergeableState(GHPullRequest pullRequest, String mergeableState) throws IOException {
         if (Objects.equals(mergeableState, "dirty")) {

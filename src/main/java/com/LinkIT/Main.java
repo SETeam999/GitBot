@@ -17,7 +17,6 @@ public class Main {
     MergeConflictResolver mergeConflictResolver = new MergeConflictResolver();
     MergingClass mergingClass = new MergingClass(tagging, checkTags, mergeConflictResolver);
 
-
     Main() {
         app = new GHApp();
 
@@ -46,7 +45,6 @@ public class Main {
             e.printStackTrace();
         }
     }
-
 
     public void start() {
         // We start our app here

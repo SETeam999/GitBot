@@ -9,11 +9,11 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class MergeMasterWithCurrentBranch {
-    private GHBranch ghBranch;
+
     private GHRepository current;
     private int branch_merge_counter = 0;
 
-    void MergeMasterWithCurrentBranch() throws IOException {
+    void MergeMasterWithCurrentBranch(GHBranch ghBranch) throws IOException {
         ghBranch.disableProtection();
         ghBranch.merge(getMasterBranch(), "Merging Master Branch with the current Branch");
         branch_merge_counter++;

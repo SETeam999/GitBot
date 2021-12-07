@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public class Notification {
 
-    void ThumbUpPullRequest(GHPullRequest ghpullRequest){
+    void ThumbUp(GHPullRequest ghpullRequest){
         try {
             ghpullRequest.comment("\uD83D\uDC4D");
         } catch (IOException e) {
