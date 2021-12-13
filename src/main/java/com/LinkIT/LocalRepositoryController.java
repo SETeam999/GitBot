@@ -9,32 +9,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.io.File;
+import java.util.Objects;
+import java.util.Scanner;
 
 public class LocalRepositoryController {
     private static String REPOSITORIES_BASE_DIR = "./repositories";
     private String repositoryName;
     private String repositoryRemoteUrl;
-    MergeMasterWithCurrentBranch mergeMasterWithCurrentBranch = new MergeMasterWithCurrentBranch();
 
 
     boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
     ProcessBuilder processBuilder = new ProcessBuilder();
 
-    public LocalRepositoryController(String repositoryName, String repositoryRemoteUrl) {
-        this.repositoryName = repositoryName;
-        this.repositoryRemoteUrl = repositoryRemoteUrl;
-    }
-
-    private void checkoutBranch(GHBranch branch) throws IOException {
-        if (isWindows) {
-            processBuilder.command("cmd.exe", "/c", "git checkout " + branch.getName()).start(); //find and add branch name
-            // or processBuilder.command("cmd.exe", "/c", "git merge new-branch");
-        } else {
-            processBuilder.command("sh", "-c", "git checkout " + branch.getName()).start(); //find and add branch name
-            //or processBuilder.command("sh", "-c", "git merge new-branch");
-        }
-
-    }
 
     private void runCommand(String workingDirectory, String ...args) throws IOException {
         File WorkingDirectoryFile = new File(workingDirectory);
@@ -67,31 +53,19 @@ public class LocalRepositoryController {
         }
     }
 
-    public void pushRepository() throws IOException {
-        if(isWindows){
-               processBuilder.command("cmd.exe", "/c", "git add .").start();
-               processBuilder.command("cmd.exe", "/c", "git commit -m 'looking for package-lock merge'").start(); //do these commands which fix package-lock conflict
-               processBuilder.command("cmd.exe", "/c", "git push").start();
-        }else{
-                processBuilder.command("sh", "-c", "git add .").start();
-                processBuilder.command("sh", "-c", "git commit -m 'looking for package-lock merge'").start(); //do these commands which fix package-lock conflict
-                processBuilder.command("cmd.exe", "/c", "git push").start();
+    public void getMergeConflictFiles(String [] mergeconflictfiles) throws IOException {
+        String workingDirectory = REPOSITORIES_BASE_DIR + "/" + repositoryName;
+        mergeconflictfiles = new String[(int) Files.size(Path.of(workingDirectory))]; //getting the maximum amount of files in the repository in case all the files have package lock conflicts
+        File myObj = new File("filename.txt");
+        Scanner myReader = new Scanner(myObj);
+        int i=0;
+        while (myReader.hasNextLine()) {
+            String data = myReader.nextLine();
+            if(Objects.equals(data, "<<<<<<<<")){
+                mergeconflictfiles[i]=myObj.getName();
             }
+            i++;
         }
-
-    public String[] getMergeConflictFiles(GHBranch branch, GHRepository r) throws IOException {
-        // Checkout the branch
-        checkoutBranch(branch);
-
-        // Try to merge it with master
-            mergeMasterWithCurrentBranch.MergeMasterWithCurrentBranch(branch);
-
-        // Check if the merge succeeded
-
-        // If success, return an empty list
-
-        // If merging failed, get the list of files that have conflicts
-
-        return new String[0];
+        myReader.close();
     }
 }

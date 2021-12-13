@@ -12,6 +12,8 @@ public class MergingClass {
     Tagging tagging;
     CheckTags checkTags = new CheckTags();
     MergeConflictResolver mergeConflictResolver;
+    Depandabot dependabot;
+    LocalRepositoryController localRepositoryController;
 
     public MergingClass(Tagging tagging, CheckTags checkTags, MergeConflictResolver mergeConflictResolver) {
         this.tagging = tagging;
@@ -32,7 +34,7 @@ public class MergingClass {
 
     private void handleReadytoMerge(GHPullRequest pullRequest) throws IOException {
         if(checkTags.checkReadytoMergeTag(pullRequest)){ //if code receives label ready to merge
-            mergeConflictResolver.automerge(pullRequest); //auto merge
+            dependabot.mergingDependabot(pullRequest); //auto merge with dependabot
             tagging.merge_in_process(pullRequest); //tag merge in process
             if(pullRequest.isMerged()){
                 tagging.is_merged(pullRequest);
@@ -53,17 +55,20 @@ public class MergingClass {
         }
 
     private void handleDirtyMergeableState(GHPullRequest pullRequest, String mergeableState) throws IOException {
+        String [] mergeconflictfiles = new String[pullRequest.getChangedFiles()];
         if (Objects.equals(mergeableState, "dirty")) {
             tagging.conflict(pullRequest); //tag merge conflict found
-            for (GHPullRequestFileDetail page: pullRequest.listFiles()) {
-                System.out.println( page.getFilename());            }
-            if (pullRequest.getMergeable()) {
-                mergeConflictResolver.package_lock_conflict_resolver(); //package-lock merge conflict resolver
-                tagging.conflict_resolved(pullRequest); //tag conflict resolved
+            localRepositoryController.pullRepository();
+            localRepositoryController.getMergeConflictFiles(mergeconflictfiles);
+            for (String mergeconflictfile : mergeconflictfiles) {
+                if (Objects.equals(pullRequest.getRepository().getName(), mergeconflictfile)) {
+                    mergeConflictResolver.package_lock_conflict_resolver(); //package-lock merge conflict resolver
+                    tagging.conflict_resolved(pullRequest); //tag conflict resolved
+                } else {
+                    tagging.not_mergeable(pullRequest);
+                }
             }
-            else{
-                tagging.not_mergeable(pullRequest);
-            }
+
         }
     }
 }

@@ -28,7 +28,7 @@
             }
         }
 
-        public void automerge(GHPullRequest pullRequest) throws IOException {
+        public void automerge(GHPullRequest pullRequest) throws IOException { //keep just in case
             if(isWindows){
                 processBuilder.command("cmd.exe", "/c", "git add .").start();
                 processBuilder.command("cmd.exe", "/c", "git commit -m 'bot merging branch to master'").start();
