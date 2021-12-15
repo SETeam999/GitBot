@@ -20,7 +20,7 @@
             pullRequest.addLabels("Merge conflict resolved.");
         }
 
-        public void merge_in_process(@NotNull GHPullRequest pullRequest) throws IOException {
+        public void merge_in_process(@NotNull GHPullRequest pullRequest) throws IOException { //keep just in case
             pullRequest.addLabels("Merge in process.");
         }
 
@@ -34,6 +34,10 @@
 
         public void nopermission_to_merge(@NotNull GHPullRequest pullRequest) throws IOException {
             pullRequest.addLabels("No merge permission");
+        }
+
+        public void failed_to_merge(@NotNull GHPullRequest pullRequest) throws IOException {
+            pullRequest.addLabels("Failed to merge");
         }
 
         public void mark_branch(@NotNull GHPullRequest pullRequest) throws IOException {

@@ -38,17 +38,15 @@ public class MergingClass {
     private void handleReadytoMerge(GHPullRequest pullRequest) throws IOException {
         if (checkTags.checkReadytoMergeTag(pullRequest)) { //if code receives label ready to merge from company
             dependabot.mergingDependabot(pullRequest); //auto merge using dependabot
-            tagging.merge_in_process(pullRequest); //tag merge in process
+//            mergeConflictResolver.automerge(pullRequest);
             if (pullRequest.isMerged()) {
                 tagging.is_merged(pullRequest);
             }
         }else if(!pullRequest.isMerged()) {
-            mergeConflictResolver.automerge(pullRequest);
-        }else{
-                tagging.nopermission_to_merge(pullRequest);
+            tagging.failed_to_merge(pullRequest);
         }
-    }
 
+    }
 
     private void handleCleanMergeableState(GHPullRequest pullRequest, String mergeableState) throws IOException {
         if (Objects.equals(mergeableState, "clean")) {

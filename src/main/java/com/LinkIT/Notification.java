@@ -25,7 +25,7 @@ public class Notification {
 
     void SadFace(@NotNull GHPullRequest ghpullRequest){
         try {
-            ghpullRequest.comment("\uD83D\uDE1E");
+            ghpullRequest.comment("\uD83D\uDE1E not mergeable");
         } catch (IOException e) {
             e.printStackTrace();
         }

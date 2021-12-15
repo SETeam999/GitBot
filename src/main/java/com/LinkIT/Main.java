@@ -38,7 +38,6 @@ public class Main {
                         notification.Processing(pullRequest);
                         if (checkTags.checkDontMergeTag(pullRequest)){
                             tagging.nopermission_to_merge(pullRequest);
-                            notification.SadFace(pullRequest);
                         }else{
                             mergingClass.merging(pullRequest);
                         }
