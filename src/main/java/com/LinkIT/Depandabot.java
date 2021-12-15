@@ -1,6 +1,6 @@
 package com.LinkIT;
 
-import org.kohsuke.github.GHMeta;
+import org.jetbrains.annotations.NotNull;
 import org.kohsuke.github.GHPullRequest;
 
 import java.io.IOException;
@@ -8,9 +8,8 @@ import java.io.IOException;
 public class Depandabot {
 
     Notification notification = new Notification();
-    MergeConflictResolver merge = new MergeConflictResolver();
 
-    public boolean isDependabot(GHPullRequest pullRequest) throws IOException {
+    public boolean isDependabot(@NotNull GHPullRequest pullRequest) throws IOException {
         return pullRequest.getUser().getName().equals("dependabot");
     }
 

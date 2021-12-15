@@ -1,5 +1,6 @@
 package com.LinkIT;
 
+import org.jetbrains.annotations.NotNull;
 import org.kohsuke.github.GHLabel;
 import org.kohsuke.github.GHPullRequest;
 
@@ -7,30 +8,30 @@ import java.util.Collection;
 
 public class CheckTags {
 
-    public boolean checkDontMergeTag(GHPullRequest pullRequest){
+    public boolean checkDontMergeTag(@NotNull GHPullRequest pullRequest){
         Collection<GHLabel> labels =  pullRequest.getLabels();
         for(GHLabel label: labels){
-            if (label.toString().equals("Dont merge")){
+            if (label.toString().equals("dont merge")){
                 return true;
             }
         }
         return false;
     }
 
-    public boolean checkReadytoMergeTag(GHPullRequest pullRequest){
+    public boolean checkReadytoMergeTag(@NotNull GHPullRequest pullRequest){
         Collection<GHLabel> labels =  pullRequest.getLabels();
         for(GHLabel label: labels){
-            if (label.toString().equals("Ready to merge")){
+            if (label.toString().equals("ready to merge")){
                 return true;
             }
         }
         return false;
     }
 
-    public boolean checkStopMergeTag(GHPullRequest pullRequest){
+    public boolean checkStopMergeTag(@NotNull GHPullRequest pullRequest){ //left for the company for later use
         Collection<GHLabel> labels =  pullRequest.getLabels();
         for(GHLabel label: labels){
-            if (label.toString().equals("Stop merge")){
+            if (label.toString().equals("stop merge")){
                 return true;
             }
         }

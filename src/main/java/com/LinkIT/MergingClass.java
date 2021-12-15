@@ -1,7 +1,7 @@
 package com.LinkIT;
 
+import org.jetbrains.annotations.NotNull;
 import org.kohsuke.github.GHPullRequest;
-import org.kohsuke.github.GHPullRequestFileDetail;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -10,15 +10,18 @@ public class MergingClass {
 
     int count_merged = 0;
     Tagging tagging;
-    CheckTags checkTags = new CheckTags();
+    Notification notification = new Notification();
+    CheckTags checkTags;
     MergeConflictResolver mergeConflictResolver;
     Depandabot dependabot;
-    LocalRepositoryController localRepositoryController;
+    LocalRepositoryController localRepositoryController = new LocalRepositoryController();
 
-    public MergingClass(Tagging tagging, CheckTags checkTags, MergeConflictResolver mergeConflictResolver) {
+    public MergingClass(Tagging tagging, CheckTags checkTags, MergeConflictResolver mergeConflictResolver, Depandabot dependabot, LocalRepositoryController localRepositoryController) {
         this.tagging = tagging;
         this.checkTags = checkTags;
         this.mergeConflictResolver = mergeConflictResolver;
+        this.dependabot = dependabot;
+        this.localRepositoryController = localRepositoryController;
     }
 
     public void merging(GHPullRequest pullRequest) throws IOException {
@@ -27,48 +30,54 @@ public class MergingClass {
         handleCleanMergeableState(pullRequest, mergeableState);
         handleDirtyMergeableState(pullRequest, mergeableState);
         handleReadytoMerge(pullRequest);
-        if(pullRequest.isMerged()){
+        if (pullRequest.isMerged()) {
             count_merged++; //counting merges
         }
     }
 
     private void handleReadytoMerge(GHPullRequest pullRequest) throws IOException {
-        if(checkTags.checkReadytoMergeTag(pullRequest)){ //if code receives label ready to merge
-            dependabot.mergingDependabot(pullRequest); //auto merge with dependabot
+        if (checkTags.checkReadytoMergeTag(pullRequest)) { //if code receives label ready to merge from company
+            dependabot.mergingDependabot(pullRequest); //auto merge using dependabot
             tagging.merge_in_process(pullRequest); //tag merge in process
-            if(pullRequest.isMerged()){
+            if (pullRequest.isMerged()) {
                 tagging.is_merged(pullRequest);
             }
-        }
-        else{
-            tagging.permission_to_merge(pullRequest);
+        }else if(!pullRequest.isMerged()) {
+            mergeConflictResolver.automerge(pullRequest);
+        }else{
+                tagging.nopermission_to_merge(pullRequest);
         }
     }
+
 
     private void handleCleanMergeableState(GHPullRequest pullRequest, String mergeableState) throws IOException {
         if (Objects.equals(mergeableState, "clean")) {
             tagging.noconflict(pullRequest); //tag no merge conflict found
-                if (!pullRequest.getMergeable()) {
-                    tagging.not_mergeable(pullRequest);
-                }
+            notification.Smiley(pullRequest);
+            if (!pullRequest.getMergeable()) {
+                tagging.not_mergeable(pullRequest);
+                notification.SadFace(pullRequest);
             }
         }
+    }
 
-    private void handleDirtyMergeableState(GHPullRequest pullRequest, String mergeableState) throws IOException {
-        String [] mergeconflictfiles = new String[pullRequest.getChangedFiles()];
+
+    private void handleDirtyMergeableState(@NotNull GHPullRequest pullRequest, String mergeableState) throws IOException {
         if (Objects.equals(mergeableState, "dirty")) {
             tagging.conflict(pullRequest); //tag merge conflict found
-            localRepositoryController.pullRepository();
-            localRepositoryController.getMergeConflictFiles(mergeconflictfiles);
-            for (String mergeconflictfile : mergeconflictfiles) {
-                if (Objects.equals(pullRequest.getRepository().getName(), mergeconflictfile)) {
+            localRepositoryController.getMergeConflictFiles(pullRequest);
+            if(localRepositoryController.getMergeConflictFiles(pullRequest)) { //check if file is package-lock
+                if (pullRequest.getMergeable()) {
                     mergeConflictResolver.package_lock_conflict_resolver(); //package-lock merge conflict resolver
                     tagging.conflict_resolved(pullRequest); //tag conflict resolved
+                    notification.ThumbUp(pullRequest);
                 } else {
                     tagging.not_mergeable(pullRequest);
+                    notification.SadFace(pullRequest);
                 }
+            } else{
+                notification.not_packagelock(pullRequest);
             }
-
         }
     }
 }

@@ -1,24 +1,29 @@
 package com.LinkIT;
 
-import org.kohsuke.github.GHIssue;
+import org.jetbrains.annotations.NotNull;
 import org.kohsuke.github.GHPullRequest;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Objects;
 
 public class Notification {
 
-    void ThumbUp(GHPullRequest ghpullRequest){
+    void ThumbUp(@NotNull GHPullRequest ghpullRequest){
         try {
-            ghpullRequest.comment("\uD83D\uDC4D");
+            ghpullRequest.comment("\uD83D\uDC4D Conflict resolved");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    void Smiley(@NotNull GHPullRequest ghpullRequest){
+        try {
+            ghpullRequest.comment("\uD83D\uDE0A No conflict found");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    void SadFace(GHPullRequest ghpullRequest){
+
+    void SadFace(@NotNull GHPullRequest ghpullRequest){
         try {
             ghpullRequest.comment("\uD83D\uDE1E");
         } catch (IOException e) {
@@ -26,15 +31,23 @@ public class Notification {
         }
     }
 
-    void Processing(GHPullRequest ghpullRequest){
+    void Processing(@NotNull GHPullRequest ghpullRequest){
         try {
-            ghpullRequest.comment("Processing...");
+            ghpullRequest.comment("GITBot processing...");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    void Inform_dependabot_updateisgood(GHPullRequest ghpullRequest){
+    void not_packagelock(@NotNull GHPullRequest ghpullRequest){
+        try {
+            ghpullRequest.comment("Cannot fix conflicts that are not package-lock yet! Please have someone fix it");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void Inform_dependabot_updateisgood(@NotNull GHPullRequest ghpullRequest){
         try {
             ghpullRequest.comment("@dependabot squash and merge");
         } catch (IOException e) {
